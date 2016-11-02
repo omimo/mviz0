@@ -35,14 +35,14 @@
               text-align: center;
               font-family: 'Inconsolata', monospace;
               background-color: #fcfcfc;
-              transition: all .4s ease-in;
+              transition: all 1s ease-out;
               opacity: 1;
               color: rgba(6,6,6,.7); 
           }
 
           #butt:hover {
               opacity: 1 !important;
-              bottom: 0px !important;
+              2bottom: 0px !important;
               /*box-shadow: 0px -10px 31px -17px rgba(82,82,82,1);*/
           }
 
@@ -142,9 +142,20 @@
         </div>
 
         <script defer>
+            var descIsShown = false;
+          $('#title').on('click', function(e) {
+              if (descIsShown) {
+                document.getElementById("butt").style.bottom="-160px";
+                document.getElementById("butt").style.opacity="0.6";
+              } else {
+                document.getElementById("butt").style.bottom="0px";
+                document.getElementById("butt").style.opacity="1";
+              }
+            descIsShown = !descIsShown;
+          });
           var fldrUrl = "gist_cache/"+getUrlParameter('g');
           var title = "";
-
+          
           if (fldrUrl === undefined) {
             console.log('No gist or folder url is defined.');
           } else if (fldrUrl !== undefined) {
@@ -164,8 +175,8 @@
 
           function loaded() {
             document.getElementById("spinner").style.display="none";
-            document.getElementById("butt").style.bottom="-170px";
-            document.getElementById("butt").style.opacity="0.4";
+            document.getElementById("butt").style.bottom="-160px";
+            document.getElementById("butt").style.opacity="0.6";
           }
 
           function lookjs() {                                        

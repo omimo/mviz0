@@ -5,6 +5,7 @@
         </title>
         <script src="https://d3js.org/d3.v4.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <script src="lib/js-yaml.min.js"></script>
         <link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">        
         <link href="assets/spinner.css" rel="stylesheet">
         <link href="assets/chasing-dots.css" rel="stylesheet">
@@ -28,13 +29,14 @@
               height: 100px;
               padding-top: 30px;              
               top: 0px;
-              box-shadow: 0px 10px 21px -17px rgba(82,82,82,1);
+              2box-shadow: 0px 10px 21px -17px rgba(82,82,82,1);
               text-align: center;
               font-family: 'Inconsolata', monospace;
               background-color: #fcfcfc;
               transition: all .4s ease-in;
               opacity: 1;
               color: rgba(6,6,6,.7); 
+              border-bottom: 0.3px solid rgba(0,0,0,.2);
 
               font-size: 28px;
           }
@@ -46,15 +48,16 @@
               height: 40px;
               padding: 10px;              
               bottom: 0px;
-              -webkit-box-shadow: 0px -2px 2px -1px rgba(0,0,0,0.75);
-              -moz-box-shadow: 0px -2px 2px -1px rgba(0,0,0,0.75);
-              box-shadow: 0px -10px 21px -17px rgba(82,82,82,1);
+              2-webkit-box-shadow: 0px -2px 2px -1px rgba(0,0,0,0.75);
+              2-moz-box-shadow: 0px -2px 2px -1px rgba(0,0,0,0.75);
+              2box-shadow: 0px -10px 21px -17px rgba(82,82,82,1);
               text-align: center;
               font-family: 'Inconsolata', monospace;
               background-color: #fcfcfc;
               transition: all .4s ease-in;
               opacity: 1;
-              color: rgba(6,6,6,.7); 
+              color: rgba(6,6,6,.7);
+              border-top: 0.3px solid rgba(0,0,0,.2); 
           }
 
           #butt:hover {
@@ -121,17 +124,54 @@
 
           .work {
               display: flex;
-              width: 400px;
+              width: 300px;
               position: relative;
               height: 200px;
               margin: 20px auto;
-              border: 0.3px solid rgba(100,100,100,0.5);
+              font-family: 'Inconsolata', monospace;
+              color: rgba(0,0,0,.9);
+              border: .2px solid rgba(190,190,190,.2);
+              cursor: pointer;
+              overflow: hidden;
           }
+
+          .work .previewimg {
+              width: 100%;
+              2height: 200px;
+              transition: all .4s;
+          }
+
+          .work .previewimg:hover {
+              transform: scale(1.05);
+          }
+
+          .work span {
+              position: absolute;
+              bottom: 10px;
+              left: 0px;
+              background-color: rgba(190,190,190,0.1);
+              padding: 5px;
+              width: 100%;
+          }
+          .card-shadow-1 {
+                2border-top: .2px solid rgba(190,190,190,.2);
+                box-shadow: 0 1px 1px rgba(0,0,0,0.2) !important
+                box-shadow: 0 1px 1px -1px rgba(0,0,0,.14),0 0px 0px 0px rgba(0,0,0,.12),0 2px 6px -1px rgba(0,0,0,.2) !important;
+                box-shadow: 0 1px 2px -1px rgba(0,0,0,.14),0 0px 0px 0px rgba(0,0,0,.12),0 2px 6px -1px rgba(0,0,0,.2) !important;
+        }
+
+.card-1 {
+      box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+
+
+
         </style>
     </head>
     <body>
         <div id="head">
-            Movement Visualization Gallery
+            <i>mViz</i> | Movement Visualization Gallery
         </div>
         <div id="main">
             <div id="list"></div>
@@ -155,24 +195,57 @@
         <script>
             $.getJSON('works.json', createList);
 
-            function createList(json) {
-                console.log(json);
+            function createList(json) { 
+                /*items = json.forEach(function(w) {
+                    $.get("p/gist_cache/"+d.gist+"/mviz.yaml", function(txt) {
+                        w.style("background-color","blue");
+                        yml = jsyaml.safeLoad(txt);
+                        title = yml.title;                                   
+                        w.text('['+title+']');                    
+                    });
+
+                    return {
+                        "w": w,
+                        "yaml": 
+                    };
+                });*/
+
                 var parent = d3.select('body').select('#list');
 
                 var work = parent.selectAll('works')
                                 .data(json)
                                 .enter()
+                                .append('a')
+                                .attr('href', function(d) {
+                                    return 'p/?g='+d.gist;
+                                })
+                                .attr('class','work card-10')
                                 .append('div')
-                                .attr('class','work');
+                                ;
+                
+                work.append("img")
+                    .attr("class","previewimg")
+                    .attr("src",function(d){
+                        return "p/gist_cache/"+d.gist+"/preview.png";
+                    });
 
-                work.text(function(d,i) {
-                          return d.src;
-                      });                                
+                work.each(function(d,i) {                               
+                    w = d3.select(this);                
+                    setTitle(w,d.gist);
+                });                
 
 
                 document.getElementById("spinner").style.display="none";
-                document.getElementById("butt").style.bottom="-10px";
-                document.getElementById("butt").style.opacity="0.4";   
+                //document.getElementById("butt").style.bottom="-10px";
+                //document.getElementById("butt").style.opacity="0.4";   
+            }
+            function setTitle(e,gist) {                                                
+                $.get("p/gist_cache/"+gist+"/mviz.yaml", function(txt) {
+                        //w.style("background-color","blue");
+                        yml = jsyaml.safeLoad(txt);
+                        title = yml.title;                                   
+                        e.append('span').text('['+title+']');                    
+                });
             }
         </script>
         

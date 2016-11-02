@@ -1,0 +1,180 @@
+<html>
+    <head>
+        <title>
+            Movement Data Visualization
+        </title>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <link href="https://fonts.googleapis.com/css?family=Inconsolata" rel="stylesheet">        
+        <link href="assets/spinner.css" rel="stylesheet">
+        <link href="assets/chasing-dots.css" rel="stylesheet">
+        <style>
+            * {
+                box-sizing: border-box
+            }
+
+            body {
+                margin: 0px;
+            }
+
+          svg {
+            position: relative;
+            left: calc(50% - 250px);
+          }
+
+          #head {
+              position: relative;
+              width: 100%;
+              height: 100px;
+              padding-top: 30px;              
+              top: 0px;
+              box-shadow: 0px 10px 21px -17px rgba(82,82,82,1);
+              text-align: center;
+              font-family: 'Inconsolata', monospace;
+              background-color: #fcfcfc;
+              transition: all .4s ease-in;
+              opacity: 1;
+              color: rgba(6,6,6,.7); 
+
+              font-size: 28px;
+          }
+
+
+          #butt {
+              position: fixed;
+              width: 100%;
+              height: 40px;
+              padding: 10px;              
+              bottom: 0px;
+              -webkit-box-shadow: 0px -2px 2px -1px rgba(0,0,0,0.75);
+              -moz-box-shadow: 0px -2px 2px -1px rgba(0,0,0,0.75);
+              box-shadow: 0px -10px 21px -17px rgba(82,82,82,1);
+              text-align: center;
+              font-family: 'Inconsolata', monospace;
+              background-color: #fcfcfc;
+              transition: all .4s ease-in;
+              opacity: 1;
+              color: rgba(6,6,6,.7); 
+          }
+
+          #butt:hover {
+              opacity: 1 !important;
+              bottom: 0px !important;
+              /*box-shadow: 0px -10px 31px -17px rgba(82,82,82,1);*/
+          }
+
+          #butt .actions {
+              float: left;
+          }
+
+          #butt .copy {              
+              2float: right;
+          }
+
+          .copy a { 
+              /*text-decoration: none;*/
+              color: inherit;              
+          }
+
+          #butt span {
+              cursor: pointer;
+          }
+
+          #spinner {
+            opacity: .6;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+          }
+
+          #title {
+            cursor: initial;    
+          }
+          
+
+          .btn {
+              background-color: #ececec;
+              padding: 4px;
+              border-radius: 4px;
+              transition: all .3s ease-out;
+          }
+
+          .btn:hover {
+              /*background-color: red;*/
+              box-shadow: 0px 2px 2px 2px rgba(102,102,102,.3);
+          }
+
+          .btn:active {
+              /*background-color: red;*/
+              box-shadow: 0px -2px -2px 2px rgba(102,102,102,.3);
+          }
+
+          #list {
+              display: flex;
+              width: 90%;
+              max-width: 1100px;
+              flex-direction: row;
+              flex-wrap: wrap;
+              margin: 10 auto;              
+          }
+
+          .work {
+              display: flex;
+              width: 400px;
+              position: relative;
+              height: 200px;
+              margin: 20px auto;
+              border: 0.3px solid rgba(100,100,100,0.5);
+          }
+        </style>
+    </head>
+    <body>
+        <div id="head">
+            Movement Visualization Gallery
+        </div>
+        <div id="main">
+            <div id="list"></div>
+        </div>
+            <!--Spinner stuff-->
+            <div id="spinner" class="sk-cube-grid">
+                <div class="sk-cube sk-cube1"></div>
+                <div class="sk-cube sk-cube2"></div>
+                <div class="sk-cube sk-cube3"></div>
+                <div class="sk-cube sk-cube4"></div>
+                <div class="sk-cube sk-cube5"></div>
+                <div class="sk-cube sk-cube6"></div>
+                <div class="sk-cube sk-cube7"></div>
+                <div class="sk-cube sk-cube8"></div>
+                <div class="sk-cube sk-cube9"></div>
+            </div>
+        <div id="butt">        
+            <span class="copy">(c) 2016 - <a href="http://omid.al">Omid Alemi</a></span>
+        </div>
+
+        <script>
+            $.getJSON('works.json', createList);
+
+            function createList(json) {
+                console.log(json);
+                var parent = d3.select('body').select('#list');
+
+                var work = parent.selectAll('works')
+                                .data(json)
+                                .enter()
+                                .append('div')
+                                .attr('class','work');
+
+                work.text(function(d,i) {
+                          return d.src;
+                      });                                
+
+
+                document.getElementById("spinner").style.display="none";
+                document.getElementById("butt").style.bottom="-10px";
+                document.getElementById("butt").style.opacity="0.4";   
+            }
+        </script>
+        
+    </body>
+</html>

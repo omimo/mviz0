@@ -3,6 +3,8 @@
         <title>
             [mViz]
         </title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
         <meta name="description" content="Human Movement Visualization Gallery">
         <meta name="author" content="Omid Alemi">
         
@@ -151,6 +153,18 @@
               cursor: pointer;
               overflow: hidden;
               border-radius: 10px;
+          }
+
+          @media screen and (max-width: 700px) {
+              .work {
+                  width: 90%;
+              }
+
+              header div {
+              padding-top: 7px; 
+              font-size: 18px;              
+              }
+
           }
 
           .work .previewimg {

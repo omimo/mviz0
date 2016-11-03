@@ -104,6 +104,17 @@
               width: 400px;
               margin: 20px auto;
           }
+
+          #mviz {
+              float:left;
+              text-decoration: underline;
+              font-style: italic;
+              color: rgba(6,6,6,.7) !important; 
+          }
+
+          #mviz a:visited {
+              color: rgba(6,6,6,.7) !important;  
+          }
         </style>
     </head>
     <body>
@@ -129,15 +140,20 @@
                 <div class="sk-cube sk-cube9"></div>
             </div>-->
         <div id="butt">
-            <span class="actions">
+            <span id="mviz"><a href="/">[mviz]</a></span>        
+            <span id="title"></span>
+            <span class="copy">by <a href="http://omid.al">Omid Alemi</a></span>
+
+            <div>
+             <div class="actions">
                 <span class="btn" onclick="savesvg()">svg</span>
                 <span class="btn" onclick="">png</span>
                 <span class="btn" onclick="lookjs()">js</span>
-            </span>
-            <span id="title"></span>
-            <span class="copy">by <a href="http://omid.al">Omid Alemi</a></span>
+            </div>
+
             <div id="desc">
 
+            </div>
             </div>
         </div>
 

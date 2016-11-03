@@ -1,18 +1,13 @@
 // Variables
-var title = 'Squares - Walk';
+var title = 'Template V2';
 var skeleton;
 var positions;
 var figureScale = 6;
-var h = 540;
-var w = 900;
+var h = 640;
+var w = 700;
 var gap = 0;
 var skip = 1;
 var traillength = 2;
-var dataFile = {frames: "http://omid.al/moveviz/data/Improv_Antonio.json",
-                skeleton: "http://omid.al/moveviz/data/ConnectivityMatrix_Antonio.json"};
-var dataFile = {frames: "http://omid.al/moveviz/data/Walk_long.json",
-                skeleton: "http://omid.al/moveviz/data/Skeleton_Walk.json"};
-
 //******************************************************************//
 var Mova = {};
 
@@ -45,16 +40,16 @@ Mova.Bones = function(parent, frames, skeleton, className) {
                  .enter();
 };
 
-function run() {    
+function run() {
     document.title = document.title + ' [' + title + '] ';
     $('#title').text('['+title+']');
     // Read the files
     console.log('Loading the data...');
     
-    d3.json(dataFile.skeleton, function(error, json) {
+    d3.json("http://omid.al/moveviz/data/CM_Prophecy_Interaction3.json", function(error, json) {
         if (error) return console.warn(error);
         skeleton = json;
-        d3.json(dataFile.frames, function(error, json) {
+        d3.json("http://omid.al/moveviz/data/Prophecy_Interaction3_p2.json", function(error, json) {
             positions = json;
             positions.splice(0, 160);
             positions.splice(positions.length-190, 190);
@@ -62,7 +57,7 @@ function run() {
              var frames = positions.map(function(ff, j) {
                 return ff.map(function(d, i) {
                 return {
-                    x: (d.x + 60) * figureScale,
+                    x: (d.x + 0) * figureScale,
                     y: -1 * d.y * figureScale + h - 10,
                     z: d.z * figureScale
                 };
@@ -85,7 +80,7 @@ function run() {
                     f = 0;
                 }
                 segment = frames.slice(f-traillength,f);
-                anim(segment, svg, f);                    
+                anim(segment,svg);                    
                 
             }, fr * 1000);
             
@@ -103,11 +98,79 @@ function draw(frames) {
     .attr("width", w)
     .attr("height", h)
     .attr("overflow", "scroll")
-    .style("display", "inline-block")
-    .style("left", "calc(50% - "+w/2+"px)");
+    .style("display", "inline-block");
 
+  // Scale the data
+  
+  index = 30;
+
+  // Joints
+  headJoint = 15;
+
+
+//   var joints = Mova.Joints(svg, frames,"ci");
+
+//    var joint = joints.append("circle")
+//     .attr("cx", function(d) {
+//       return d.x + Math.random() * 0;
+//     })
+//     .attr("cy", function(d) {
+//       return d.y + Math.random() * 0;
+//     })
+//     .attr("r", function(d, i) {
+//       if (i == headJoint)
+//         return .8;
+//       else
+//         return .8;
+//     })
+//     .attr("fill",'grey')
+//     .attr("fill-opacity", function(d, j, k) {
+//     	if ((k * skip) < (frames.length/ 2))
+//         coef = (k * skip)/frames.length;
+//       else
+//         coef = (frames.length - (k * skip))/frames.length;
+//       return coef;
+//     });
+
+
+  // Bones
+  // svg.selectAll("g.bones")
+  //   .data(frames.filter(function(d, i) {
+  //     return i % skip == 0;
+  //   }))
+  //   .enter()
+  //   .append("g")
+  //   .attr("transform", function(d, i) {
+  //     return "translate(" + (i * gap) + ",0)";
+  //   })
+  //   .selectAll("line.f" + index)
+  //   .data(skeleton)
+  //   .enter()
+  //   .append("line")
+  //   .attr("stroke", "grey")
+  //   .attr("stroke-opacity", function(d, j, k) {
+  //   	if ((k * skip) < (frames.length/ 2))
+  //       coef = (k * skip)/frames.length;
+  //     else
+  //       coef = (frames.length - (k * skip))/frames.length;
+  //     return coef;
+  //   })
+  //   .attr("stroke-width", .2)
+  //   .attr("x1", 0).attr("x2", 0)
+  //   .attr("x1", function(d, j, k) {
+  //     return frames[k * skip][d[0]].x;
+  //   })
+  //   .attr("x2", function(d, j, k) {
+  //     return frames[k * skip][d[1]].x;
+  //   })
+  //   .attr("y1", function(d, j, k) {
+  //     return frames[k * skip][d[0]].y;
+  //   })
+  //   .attr("y2", function(d, j, k) {
+  //     return frames[k * skip][d[1]].y;
+  //   });
     window.parent.loaded();
-    
+
     return svg;
 }
 
@@ -137,7 +200,7 @@ var bones = Mova.Bones(svg, frames, skeleton, "boneanim");
 
   // Bones
 var boneFunction = d3.svg.line()
-    .x(function(d,j,k) { return frames[0][d[0]].x; })
+    .x(function(d,j,k) {return frames[0][d[0]].x; })
     .y(function(d) { return frames[0][d[0]].y; })
     .interpolate("linear");
 
@@ -153,35 +216,34 @@ function anim(frames, svg, f) {
   // Joints
   headJoint = 15;
 
-//  svg.selectAll("g.jointsanim")
-//     .data(frames)
-//     .selectAll("circle.anim")
-//     .data(function(d, i) {
-//       return d;
-//     })
-//     .attr("cx", function(d) {
-//       return d.x;
-//     })
-//     .attr("cy", function(d) {
-//       return d.y;
-//     })
-//     .attr("r", function(d, i, k) {
-//         return .1 + 1.5 * k/traillength;
-//     })
-//     .attr("fill",'#666666')
-//     .attr("fill-opacity", function (d,i, k) {
-//         return .9+k/traillength;
-//     });
+ svg.selectAll("g.jointsanim")
+    .data(frames)
+    .selectAll("circle.anim")
+    .data(function(d, i) {
+      return d;
+    })
+    .attr("cx", function(d) {
+      return d.x;
+    })
+    .attr("cy", function(d) {
+      return d.y;
+    })
+    .attr("r", function(d, i, k) {
+        return .2 + 1.5 * k/traillength;
+    })
+    .attr("fill",'#cc6666')
+    .attr("fill-opacity", function (d,i, k) {
+        return k/traillength;
+    });
 
 
   // Bones
 
 var boneFunction = function(d, k) {
     bf = d3.svg.line()
-    .x(function(d) { return frames[k][d[0]].x + fu(k) * 0; })
-    .y(function(d) { return frames[k][d[0]].y + fu(k) * 0; })
-    // .interpolate("basis");
-    .interpolate("step-after");
+    .x(function(d) { return frames[k][d[0]].x; })
+    .y(function(d) { return frames[k][d[0]].y; })
+    .interpolate("basis");
     return (bf(d));
 };
 
@@ -200,7 +262,7 @@ var boneFunction = function(d, k) {
         return 0 + 0.1 * k/traillength;
     })
     .attr("stroke-width", function (d,i, k) {
-        return  1 +  k/traillength;
+        return  0.2 +  k/traillength  + Math.random() * 0;
     });
 }
 var boneFunction_ = function() {
@@ -212,8 +274,5 @@ var boneFunction_ = function() {
 
 function fu(k) {
     // console.log(k);
-    if (Math.random() < 0.2)
-        return Math.random() * 50;
-    else
-        return 0;
+    return Math.sin(k) * 0;
 }

@@ -1,13 +1,13 @@
 // Variables
-var title = 'Anotinio - Entangled';
+var title = 'BEA - Entangled';
 var skeleton;
 var positions;
-var figureScale = 3;
+var figureScale = 7;
 var h = 670;
-var w = 600;
+var w = 700;
 var gap = 0;
 var skip = 1;
-//******************************************************************//
+//******************************************************************// 
 
 function run() {
     document.title = document.title + ' [' + title + '] ';
@@ -15,10 +15,10 @@ function run() {
     // Read the files
     console.log('Loading the data...');
     
-    d3.json("http://omid.al/moveviz/data/ConnectivityMatrix_Antonio.json", function(error, json) {
+    d3.json("http://omid.al/moveviz/data/Skeleton_BEA.json", function(error, json) {
         if (error) return console.warn(error);
         skeleton = json;
-        d3.json("http://omid.al/moveviz/data/Improv_Antonio.json", function(error, json) {
+        d3.json("http://omid.al/moveviz/data/BEA.json", function(error, json) {
             positions = json;
             positions.splice(0, 160);
             positions.splice(positions.length-190, 190);
@@ -46,7 +46,7 @@ function draw() {
   frames = positions.map(function(ff, j) {
     return ff.map(function(d, i) {
       return {
-        x: (d.x + 70) * figureScale,
+        x: (d.x ) * figureScale + 370,
         y: -1 * d.y * figureScale + h - 10,
         z: d.z * figureScale
       };
@@ -77,21 +77,21 @@ function draw() {
       return d.y;
     }).attr("r", function(d, i) {
       if (i == headJoint)
-        return .6;
+        return .4;
       else
-        return .8;
+        return .4;
     }).attr("fill",'#555555')
     .attr("fill-opacity",function(d, i,k) {
     	if ((k * skip) < (frames.length/ 2))
         coef = (k * skip)/frames.length;
       else
         coef = (frames.length - (k * skip))/frames.length;   
-			return coef;
+			return coef-0.1;
     });
 
 
   // Bones
-  svg.selectAll("g.bones")
+ frameBones = svg.selectAll("g.bones")
     .data(frames.filter(function(d, i) {
       return i % skip == 0;
     }))
@@ -99,22 +99,26 @@ function draw() {
     .append("g")
     .attr("transform", function(d, i) {
       return "translate(" + (i * gap) + ",0)";
-    })
-    .selectAll("line.f" + index)
+    });
+
+  bones = frameBones.selectAll("line.f" + index)
     .data(skeleton)
-    .enter()
-    .append("line")
-    .attr("stroke", "grey")
+    .enter();
+
+  bone = bones.append("line")
+    .attr("stroke", function(d,j,k) {
+        return "black";
+    })
     .attr("stroke-opacity", function(d, j, k) {
     	if ((k * skip) < (frames.length/ 2))
         coef = (k * skip)/frames.length;
       else
         coef = (frames.length - (k * skip))/frames.length;
-      return coef;
+      return coef - 0.1;
     })
     .attr("stroke-width", .2)
     .attr("x1", 0).attr("x2", 0)
-    .attr("x1", function(d, j, k) {
+    .attr("x1", function(d, j, k) { 
       return frames[k * skip][d[0]].x;
     })
     .attr("x2", function(d, j, k) {

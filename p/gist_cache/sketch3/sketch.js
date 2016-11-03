@@ -1,9 +1,9 @@
 // Variables
 var connectivityMatrix;
 var positions;
-var figureScale = 3;
+var figureScale = 2.2;
 var h = 270;
-var w = 1200;
+var w = 1000;
 var gap = 0.6;
 var skip = 2;
 

@@ -3,6 +3,9 @@
         <title>
             mViz
         </title>
+        <meta name="description" content="Human Movement Visualization Gallery">
+        <meta name="author" content="Omid Alemi">
+
         <meta name="twitter:card" content="summary_large_image">
         <meta name="twitter:site" content="@alvand2">
         <meta name="twitter:creator" content="@alvand2">
@@ -180,7 +183,12 @@
                 document.title = document.title + ' [' + title + '] ';
                 $('#title').text('['+title+']');
                 $('#desc').html(''+yml.description.replace(/\n/g, '<br/>')+'');
-                $("meta[property=twitter:title]").attr("content", '['+title+']');
+
+                $('meta[name="twitter:title"]').attr('content', '['+title+']');
+                $('meta[name="title"]').attr('content', '['+title+']');
+                $('meta[name="twitter:description"]').attr('content', yml.description);
+                $('meta[name="description"]').attr('content', yml.description);
+                $('meta[name="twitter:image"]').attr('content', 'http://omid.al/mviz/p/gist_cache/'+getUrlParameter('g')+'/preview.png');
             });
               console.log( "Loaded." ); 
           }
